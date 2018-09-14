@@ -9,11 +9,11 @@
 #include "SoftwareSerial.h"
 
 #include <ESP8266WiFi.h>
-#include <WiFiManager.h>
-#include <PubSubClient.h>
+//#include <WiFiManager.h>
+//#include <PubSubClient.h>
 
 #include <Wire.h>
-#include <BME280I2C.h>
+//#include <BME280I2C.h>
 
 // PMS7003 pins
 #define PIN_RX  D7

@@ -6,12 +6,15 @@
 //
 // Please uncomment #define PMS_DYNAMIC in pmsConfig.h file
 //
+#define RX_PIN 5
+#define TX_PIN 4
 
 #if defined PMS_DYNAMIC
 Pmsx003 *pms_ = nullptr;
 #define pms (*pms_)
 #else
-Pmsx003 pms(D3, D4);
+// RX, TX
+Pmsx003 pms(RX_PIN, TX_PIN);
 #endif
 
 ////////////////////////////////////////
@@ -22,13 +25,16 @@ void setup(void) {
 	Serial.println("Pmsx003");
 
 #if defined PMS_DYNAMIC
-	pms_ = new Pmsx003(D3, D4);
+	pms_ = new Pmsx003(RX_PIN, TX_PIN);
 #else
 	pms.begin();
 #endif 
 
 	pms.waitForData(Pmsx003::wakeupTime);
+  Serial.println("Wait for data");
 	pms.write(Pmsx003::cmdModeActive);
+  Serial.println("Read data");
+
 }
 
 ////////////////////////////////////////
@@ -36,13 +42,26 @@ void setup(void) {
 auto lastRead = millis();
 
 void loop(void) {
+  //Serial.println("Entered loop");
 
 	const Pmsx003::pmsIdx n = Pmsx003::nValues_PmsDataNames;
 	Pmsx003::pmsData data[n];
-
+ 
+  //Serial.println("Print Data");
+  
 	auto t0Read = millis();
 	Pmsx003::PmsStatus status = pms.read(data, n);
 	auto t1Read = millis();
+
+//  Serial.print("\nData: ");
+//  Serial.print(data[n]);
+//  Serial.print("\tN: ");
+//  Serial.print(n);
+//  Serial.print("\tStatus: ");
+//  Serial.print(status);
+ // Serial.print("\tError: ");
+  //Serial.print(errorMsg[readStatus]);
+
 
 	switch (status) {
 		case Pmsx003::OK:
@@ -67,6 +86,7 @@ void loop(void) {
 			break;
 		}
 		case Pmsx003::noData:
+      //Serial.println("\nNo data");
 			break;
 		default:
 			Serial.println("_________________");
